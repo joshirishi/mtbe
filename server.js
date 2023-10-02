@@ -1,9 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-const path = require('path');
-const fs = require('fs');
-const cors = require('cors');  // Import the CORS package
+const cors = require('cors');
 const app = express();
 
 // Enable CORS for all routes
@@ -43,16 +40,17 @@ const trackingSchema = new mongoose.Schema({
     productAccess: Number,
     avgTimeSpent: Number,
     featureAdoptionRate: Number,
+    heatmapData: Object,  // New field to store heatmap data
     timestamp: {
       type: Date,
       default: Date.now
     }
-  });
-  
-  const TrackingData = mongoose.model('TrackingData', trackingSchema);
-  
-  // API endpoint to receive tracking data
-  app.post('/api/track', async (req, res) => {
+});
+
+const TrackingData = mongoose.model('TrackingData', trackingSchema);
+
+// API endpoint to receive tracking data
+app.post('/api/track', async (req, res) => {
     console.log('Received data:', req.body);
     try {
       const trackingData = new TrackingData(req.body);
@@ -61,10 +59,10 @@ const trackingSchema = new mongoose.Schema({
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error saving data: ' + error);
-      }
-      
-  });
-  app.use(express.static('public'));
+    }
+});
+
+app.use(express.static('public'));
 
 // Start the server
 const PORT = 8000;
@@ -75,4 +73,6 @@ app.listen(PORT, () => {
 // Add this code to your server.js file
 app.get('/', (req, res) => {
     res.send('Backend server is running');
-  });
+});
+
+
