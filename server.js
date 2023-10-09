@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 
 // Enable CORS for all routes
 app.use(cors());
@@ -40,7 +41,10 @@ const trackingSchema = new mongoose.Schema({
     productAccess: Number,
     avgTimeSpent: Number,
     featureAdoptionRate: Number,
-    heatmapData: Object,  // New field to store heatmap data
+    heatmapData: Object,
+    navigationPath: [String],  // New field to store navigation path
+    dropOffPage: String,       // New field to store drop-off page
+    visitorToken: String,      // New field to identify unique visitors
     timestamp: {
       type: Date,
       default: Date.now
@@ -74,5 +78,3 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
-
-

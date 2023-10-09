@@ -6,6 +6,7 @@ services:
       - "8000:8000"
     links:
       - db
+   
   db:
     image: mongo:latest
     ports:
