@@ -42,9 +42,15 @@ const trackingSchema = new mongoose.Schema({
     avgTimeSpent: Number,
     featureAdoptionRate: Number,
     heatmapData: Object,
-    navigationPath: [String],  // New field to store navigation path
-    dropOffPage: String,       // New field to store drop-off page
-    visitorToken: String,      // New field to identify unique visitors
+    navigationPath: [String],
+    dropOffPage: String,
+    visitorToken: String,
+    os: String,                  // New field to track OS
+    deviceType: String,          // New field to track device type
+    origin: String,              // New field to track origin
+    windowSize: Object,          // New field to track window size
+    maxScrollDepth: Number,      // New field to track maximum scroll depth
+    confusedScrolling: Boolean,  // New field to track "confused" scrolling
     timestamp: {
       type: Date,
       default: Date.now
@@ -74,7 +80,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Add this code to your server.js file
+// Root endpoint
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
