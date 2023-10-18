@@ -54,7 +54,20 @@ const trackingSchema = new mongoose.Schema({
     timestamp: {
       type: Date,
       default: Date.now
-    }
+  },
+  journeyStarted: {
+      type: Number,
+      default: 0
+  },
+  dropOff: {
+      type: Number,
+      default: 0
+  },
+  bounce: {
+    type: Number,
+    default: 0
+},
+
 });
 
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
@@ -65,11 +78,36 @@ app.post('/api/track', async (req, res) => {
     try {
       const trackingData = new TrackingData(req.body);
       await trackingData.save();
+      // Handle journeyStarted and dropOff events
+      if (req.body.eventType === 'journeyStarted') {
+        await TrackingData.updateOne({}, { $inc: { journeyStarted: 1 } });
+    } else if (req.body.eventType === 'dropOff') {
+        await TrackingData.updateOne({}, { $inc: { dropOff: 1 } });
+    }
       res.status(200).send('Data received and saved');
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error saving data: ' + error);
     }
+});
+
+// API endpoint to get drop-off rate
+app.get('/api/dropoff-rate', async (req, res) => {
+  try {
+      const totalJourneyStarted = await TrackingData.aggregate([{ $sum: "$journeyStarted" }]);
+      const totalDropOffs = await TrackingData.aggregate([{ $sum: "$dropOff" }]);
+      
+      const dropOffRate = (totalDropOffs / totalJourneyStarted) * 100;
+      
+      if (req.body.eventType === 'bounce') {
+        await TrackingData.updateOne({}, { $inc: { bounce: 1 } });
+    }
+      
+      res.status(200).json({ dropOffRate: dropOffRate });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching data: ' + error);
+  }
 });
 
 app.use(express.static('public'));
