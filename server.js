@@ -76,6 +76,12 @@ const trackingSchema = new mongoose.Schema({
 
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
 
+const webMapSchema = new mongoose.Schema({
+  url: String,
+  links: [String]
+});
+const WebMapData = mongoose.model('WebMapData', webMapSchema);
+
 // API endpoint to receive tracking data
 app.post('/api/track', async (req, res) => {
     console.log('Received data:', req.body);
@@ -100,6 +106,28 @@ app.post('/api/track', async (req, res) => {
     }
 });
 
+// API Endpoint to store web map data
+app.post('/api/store-webmap', async (req, res) => {
+  console.log('Received web map data:', req.body);
+  try {
+      // Check if data for the URL already exists
+      const existingData = await WebMapData.findOne({ url: req.body.url });
+      if (existingData) {
+          // Update existing record
+          existingData.links = req.body.links;
+          await existingData.save();
+      } else {
+          // Insert new record
+          const webMapData = new WebMapData(req.body);
+          await webMapData.save();
+      }
+      res.status(200).send('Web map data received and saved');
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error saving web map data: ' + error);
+  }
+});
+
 // API endpoint to get drop-off rate
 app.get('/api/dropoff-rate', async (req, res) => {
   try {
@@ -119,6 +147,16 @@ app.get('/api/dropoff-rate', async (req, res) => {
   }
 });
 
+// API endpoint to get web map data
+app.get('/api/get-webmap', async (req, res) => {
+  try {
+      const webMapData = await WebMapData.find();
+      res.status(200).json(webMapData);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching web map data: ' + error);
+  }
+});
 /*
 // API endpoint to get active interactions count
 app.get('/api/active-interactions', async (req, res) => {
