@@ -66,7 +66,11 @@ const trackingSchema = new mongoose.Schema({
   bounce: {
     type: Number,
     default: 0
-},
+  },
+  activeInteraction: {
+  type: Boolean,
+  default: false
+  },
 
 });
 
@@ -78,6 +82,11 @@ app.post('/api/track', async (req, res) => {
     try {
       const trackingData = new TrackingData(req.body);
       await trackingData.save();
+
+      // Handle activeInteraction event
+      if (req.body.eventType === 'activeInteraction') {
+        await TrackingData.updateOne({}, { $inc: { activeInteractions: 1 } });
+    }
       // Handle journeyStarted and dropOff events
       if (req.body.eventType === 'journeyStarted') {
         await TrackingData.updateOne({}, { $inc: { journeyStarted: 1 } });
@@ -109,6 +118,19 @@ app.get('/api/dropoff-rate', async (req, res) => {
       res.status(500).send('Error fetching data: ' + error);
   }
 });
+
+/*
+// API endpoint to get active interactions count
+app.get('/api/active-interactions', async (req, res) => {
+    try {
+        const totalActiveInteractions = await TrackingData.aggregate([{ $sum: "$activeInteractions" }]);
+        res.status(200).json({ totalActiveInteractions: totalActiveInteractions[0].activeInteractions });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error fetching data: ' + error);
+    }
+});
+*/
 
 app.use(express.static('public'));
 
