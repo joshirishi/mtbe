@@ -147,16 +147,18 @@ app.get('/api/dropoff-rate', async (req, res) => {
   }
 });
 
-// API endpoint to get web map data
+// modified API endpoint to get web map data for a specific URL
 app.get('/api/get-webmap', async (req, res) => {
+  const targetUrl = req.query.url;
   try {
-      const webMapData = await WebMapData.find();
+      const webMapData = targetUrl ? await WebMapData.find({ url: targetUrl }) : await WebMapData.find();
       res.status(200).json(webMapData);
   } catch (error) {
       console.error('Error:', error);
       res.status(500).send('Error fetching web map data: ' + error);
   }
 });
+
 /*
 // API endpoint to get active interactions count
 app.get('/api/active-interactions', async (req, res) => {
