@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 
 // Enable CORS for all routes
 app.use(cors());
@@ -40,7 +41,16 @@ const trackingSchema = new mongoose.Schema({
     productAccess: Number,
     avgTimeSpent: Number,
     featureAdoptionRate: Number,
-    heatmapData: Object,  // New field to store heatmap data
+    heatmapData: Object,
+    navigationPath: [String],
+    dropOffPage: String,
+    visitorToken: String,
+    os: String,                  // New field to track OS
+    deviceType: String,          // New field to track device type
+    origin: String,              // New field to track origin
+    windowSize: Object,          // New field to track window size
+    maxScrollDepth: Number,      // New field to track maximum scroll depth
+    confusedScrolling: Boolean,  // New field to track "confused" scrolling
     timestamp: {
       type: Date,
       default: Date.now
@@ -81,9 +91,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Add this code to your server.js file
+// Root endpoint
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
-
-
