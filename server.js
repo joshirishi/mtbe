@@ -62,6 +62,17 @@ app.post('/api/track', async (req, res) => {
     }
 });
 
+app.get('/api/visitors', async (req, res) => {
+  console.log('Visitor Data requested');
+  try{
+    const uniqueVisitorCount = await TrackingData.count({eventType:'new-visitor'});
+    res.status(200).send({uniqueVisitorCount: uniqueVisitorCount});
+  }catch (error){
+    console.error('Error:', error);
+    res.status(500).send('Error retreiving data: ' + error);
+  }
+});
+
 app.use(express.static('public'));
 
 // Start the server
