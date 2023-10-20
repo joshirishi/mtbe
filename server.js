@@ -105,20 +105,19 @@ app.post('/api/track', async (req, res) => {
         res.status(500).send('Error saving data: ' + error);
     }
 });
-
 // API Endpoint to store web map data
 app.post('/api/store-webmap', async (req, res) => {
   console.log('Received web map data:', req.body);
   try {
-      // Check if data for the URL already exists
-      const existingData = await WebMapData.findOne({ url: req.body.url });
+      const existingData = await WebMapData.findOne({ url: req.body.url });       // Check if data for the URL already exists
+
       if (existingData) {
-          // Update existing record
-          existingData.links = req.body.links;
+          existingData.links = req.body.links;           // Update existing record
+
           await existingData.save();
       } else {
-          // Insert new record
-          const webMapData = new WebMapData(req.body);
+          const webMapData = new WebMapData(req.body);           // Insert new record
+
           await webMapData.save();
       }
       res.status(200).send('Web map data received and saved');
