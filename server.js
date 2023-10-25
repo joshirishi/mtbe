@@ -88,6 +88,12 @@ const wsServer = http.createServer((req, res) => {
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server: wsServer });
 
+// Start the WebSocket server on a different port
+const WS_PORT = 8001;
+wsServer.listen(WS_PORT, () => {
+  console.log(`WebSocket Server running on port ${WS_PORT}`);
+});
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
@@ -276,11 +282,6 @@ app.get('/api/active-interactions', async (req, res) => {
 });
 */
 
-// Start the WebSocket server on a different port
-const WS_PORT = 8001;
-wsServer.listen(WS_PORT, () => {
-  console.log(`WebSocket Server running on port ${WS_PORT}`);
-});
 
 
 app.use(express.static('public'));
