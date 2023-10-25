@@ -295,3 +295,4 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
+// End of root endpoint
