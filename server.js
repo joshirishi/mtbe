@@ -2,27 +2,25 @@ const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const app = express();
+const WebSocket = require('ws');
 const path = require('path');
+const { exec } = require('child_process');
 
-// Enable CORS for all routes
-app.use(cors());
+const app = express();
 
-//create server app
-const server = http.createServer(app);
+// Middleware Setup
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Middleware to parse JSON
+app.use(express.static('public')); // Serve static files from the 'public' directory
 
-
-// Connect to MongoDB
+// MongoDB Connection
 mongoose.connect('mongodb://db:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-  if (err) {
-    console.error('Error connecting to MongoDB:', err);
-  } else {
-    console.log('Connected to MongoDB');
-  }
+    if (err) {
+        console.error('Error connecting to MongoDB:', err);
+    } else {
+        console.log('Connected to MongoDB');
+    }
 });
-
-// Middleware to parse JSON
-app.use(express.json());
 
 // Define a Mongoose schema and model for tracking data
 const trackingSchema = new mongoose.Schema({
@@ -79,21 +77,29 @@ const trackingSchema = new mongoose.Schema({
 
 });
 
+const TrackingData = mongoose.model('TrackingData', trackingSchema);
+
+
+
+// Schema for hierarchical data
+const linkSchema = new mongoose.Schema({
+  name: String,
+  children: [this]
+});
+
+const WebMapData = mongoose.model('WebMapData', linkSchema);
+
+
+
 // Create a new HTTP server for WebSocket
 const wsServer = http.createServer((req, res) => {
   res.writeHead(404, { 'Content-Type': 'text/plain' });
   res.end('Not Found');
 });
 
-const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server: wsServer });
 
-// Start the WebSocket server on a different port
-const WS_PORT = 8001;
-wsServer.listen(WS_PORT, () => {
-  console.log(`WebSocket Server running on port ${WS_PORT}`);
-});
-
+// WebSocket setup
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
@@ -105,59 +111,35 @@ wss.on('connection', (ws) => {
   };
 });
 
-// Integrate WebSocket with your new server
-wsServer.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-      wss.emit('connection', ws, request);
-  });
+// Start the WebSocket server on a different port
+const WS_PORT = 8001;
+wsServer.listen(WS_PORT, () => {
+  console.log(`WebSocket Server running on port ${WS_PORT}`);
 });
 
-const TrackingData = mongoose.model('TrackingData', trackingSchema);
+//API endpoints
 
-const webMapSchema = new mongoose.Schema({
-  url: String,
-  links: [Array]
-});
-// const WebMapData = mongoose.model('WebMapData', webMapSchema);
-
-const linkSchema = new mongoose.Schema({
-  id: String,  // URL of the page
-  children: [this]  // Recursive definition to allow nested links
-});
-
-const WebMapData = mongoose.model('WebMapData', linkSchema);
-/* 
-linkSchema.add({
-  links: [linkSchema]
-});
-*/
-
+// API endpoint to trigger the scraper
 const { exec } = require('child_process');
 
 app.get('/api/trigger-scraper', (req, res) => {
+
+  const urlToScrape = req.query.url || 'https://maitridesigns.com'; // Use the provided URL or default to 'https://maitridesigns.com'
   // Immediately respond to the frontend
   res.status(202).json({ message: 'Scraper started. Processing in the background.' });
 
-  // Run the scraper in the background
-  exec('node /app/webmap/src/index.js', (error, stdout, stderr) => {
-      if (error) {
-          console.error(`exec error: ${error}`);
-          // Handle error (e.g., store in a log, notify admin, etc.)
-          return;
-      }
-      console.log('Scraper executed successfully.');
-      // Store results or notify frontend if necessary
-
-      // Send the logs to the frontend
-    res.json({ status: 'success', logs: logs });
-  });
+  // Run the scraper in the background with the provided URL
+    exec(`node /app/webmap/src/index.js ${urlToScrape}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            // Handle error (e.g., store in a log, notify admin, etc.)
+            return;
+        }
+        console.log('Scraper executed successfully.');
+        // Store results or notify frontend if necessary
+    });
 });
 
-const webMapDataSchema = new mongoose.Schema({
-  url: String,
-  title: String,
-  links: [linkSchema]
-});
 
 
 // API endpoint to receive tracking data
@@ -183,11 +165,13 @@ app.post('/api/track', async (req, res) => {
         res.status(500).send('Error saving data: ' + error);
     }
 });
+
+
 // API Endpoint to store web map data
 app.post('/api/store-webmap', async (req, res) => {
   console.log('Received web map data:', req.body);
   try {
-      const existingData = await WebMapData.findOne({ id: req.body.id });  // Check if data for the URL already exists
+      const existingData = await WebMapData.findOne({ name: req.body.name });  // Check if data for the URL already exists
 
       if (existingData) {
           existingData.children = req.body.children;  // Update existing record
@@ -203,17 +187,18 @@ app.post('/api/store-webmap', async (req, res) => {
   }
 });
 
-// modified API endpoint to get web map data for a specific URL
+// API endpoint to get web map data for a specific URL
 app.get('/api/get-webmap', async (req, res) => {
-  const targetUrl = req.query.url;
+  const targetName = req.query.name;  // Using name instead of URL
   try {
-      const webMapData = targetUrl ? await WebMapData.find({ id: targetUrl }) : await WebMapData.find();
+      const webMapData = targetName ? await WebMapData.findOne({ name: targetName }) : await WebMapData.find();
       res.status(200).json(webMapData);
   } catch (error) {
       console.error('Error:', error);
       res.status(500).send('Error fetching web map data: ' + error);
   }
 });
+
 /*
 app.get('/api/get-webmap-by-title', async (req, res) => {
   const targetTitle = req.query.title;
@@ -226,6 +211,7 @@ app.get('/api/get-webmap-by-title', async (req, res) => {
   }
 });
 */
+
 app.delete('/api/delete-webmap', async (req, res) => {
   const targetUrl = req.query.url;
   try {
@@ -283,8 +269,10 @@ app.get('/api/active-interactions', async (req, res) => {
 */
 
 
-
-app.use(express.static('public'));
+// Root endpoint
+app.get('/', (req, res) => {
+  res.send('Backend server is running');
+});
 
 // Start the server
 const PORT = 8000;
@@ -292,8 +280,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.send('Backend server is running');
-});
-// End of root endpoint
+

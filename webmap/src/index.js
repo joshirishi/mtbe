@@ -8,13 +8,13 @@ console.log = function(message) {
     originalConsoleLog.apply(console, arguments);
 };
 
-const targetUrl = process.argv[2] || 'https://maitridesigns.com';
-const maxDepth = 2;
+const targetURL = process.argv[2] || 'https://maitridesigns.com'; // Default to 'https://maitridesigns.com' if no argument is provided
+const maxDepth = 1;
 const visitedUrls = new Set(); // Set to track visited URLs
 
 async function scrapeWebMap(url, depth = 0) {
     if (depth > maxDepth || visitedUrls.has(url)) {
-        return { id: url };
+        return { name: url };
     }
 
     console.log(`Scraping URL: ${url} (Depth: ${depth})`); // Log the current URL being scraped
@@ -49,7 +49,7 @@ async function scrapeWebMap(url, depth = 0) {
     }
 
     return {
-        id: url,
+        name: url,
         children: children.length > 0 ? children : undefined
     };
 }
