@@ -120,7 +120,6 @@ wsServer.listen(WS_PORT, () => {
 //API endpoints
 
 // API endpoint to trigger the scraper
-const { exec } = require('child_process');
 
 app.get('/api/trigger-scraper', (req, res) => {
 

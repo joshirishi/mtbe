@@ -150,7 +150,28 @@ async function init() {
 }
 
 init();
+function transformData(data, parentId = null) {
+    let nodes = [];
+    let links = [];
 
+    const nodeId = data.url;
+    nodes.push({ id: nodeId, title: data.title });
+
+    if (parentId) {
+        links.push({ source: parentId, target: nodeId });
+    }
+
+    // Check if data.links is defined and is an array
+    if (data.links && Array.isArray(data.links)) {
+        data.links.forEach(child => {
+            const childData = transformData(child, nodeId);
+            nodes = nodes.concat(childData.nodes);
+            links = links.concat(childData.links);
+        });
+    }
+
+    return { nodes, links };
+}
 
 /*
 ((async function() {

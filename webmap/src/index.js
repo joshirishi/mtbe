@@ -8,7 +8,13 @@ console.log = function(message) {
     originalConsoleLog.apply(console, arguments);
 };
 
-const targetURL = process.argv[2] || 'https://maitridesigns.com'; // Default to 'https://maitridesigns.com' if no argument is provided
+const targetUrl = process.argv[2] || 'https://maitridesigns.com'; // Default to 'https://maitridesigns.com' if no argument is provided
+
+if (!targetUrl) {
+    console.error("No target URL provided.");
+    process.exit(1); // Exit the script with an error code
+}
+
 const maxDepth = 1;
 const visitedUrls = new Set(); // Set to track visited URLs
 
@@ -22,7 +28,7 @@ async function scrapeWebMap(url, depth = 0) {
     visitedUrls.add(url); // Mark the URL as visited
 
     const browser = await puppeteer.launch({
-        headless: "new",
+        headless: true,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox'
@@ -71,6 +77,7 @@ async function main() {
 }
 
 main();
+
 
 
 
