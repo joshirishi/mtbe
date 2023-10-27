@@ -1,23 +1,26 @@
+const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const app = express();
+const WebSocket = require('ws');
 const path = require('path');
+const { exec } = require('child_process');
 
-// Enable CORS for all routes
-app.use(cors());
+const app = express();
 
-// Connect to MongoDB
+// Middleware Setup
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Middleware to parse JSON
+app.use(express.static('public')); // Serve static files from the 'public' directory
+
+// MongoDB Connection
 mongoose.connect('mongodb://db:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-  if (err) {
-    console.error('Error connecting to MongoDB:', err);
-  } else {
-    console.log('Connected to MongoDB');
-  }
+    if (err) {
+        console.error('Error connecting to MongoDB:', err);
+    } else {
+        console.log('Connected to MongoDB');
+    }
 });
-
-// Middleware to parse JSON
-app.use(express.json());
 
 // Define a Mongoose schema and model for tracking data
 const trackingSchema = new mongoose.Schema({
@@ -80,11 +83,67 @@ const trackingSchema = new mongoose.Schema({
 
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
 
-const webMapSchema = new mongoose.Schema({
-  url: String,
-  links: [String]
+
+
+// Schema for hierarchical data
+const linkSchema = new mongoose.Schema({
+  name: String,
+  children: [this]
 });
-const WebMapData = mongoose.model('WebMapData', webMapSchema);
+
+const WebMapData = mongoose.model('WebMapData', linkSchema);
+
+
+
+// Create a new HTTP server for WebSocket
+const wsServer = http.createServer((req, res) => {
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not Found');
+});
+
+const wss = new WebSocket.Server({ server: wsServer });
+
+// WebSocket setup
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+
+  // Override console.log to send logs to the frontend
+  const originalConsoleLog = console.log;
+  console.log = function(message) {
+      originalConsoleLog.apply(console, arguments);
+      ws.send(message);
+  };
+});
+
+// Start the WebSocket server on a different port
+const WS_PORT = 8001;
+wsServer.listen(WS_PORT, () => {
+  console.log(`WebSocket Server running on port ${WS_PORT}`);
+});
+
+//API endpoints
+
+// API endpoint to trigger the scraper
+
+app.get('/api/trigger-scraper', (req, res) => {
+
+  const urlToScrape = req.query.url || 'https://maitridesigns.com'; // Use the provided URL or default to 'https://maitridesigns.com'
+  // Immediately respond to the frontend
+  res.status(202).json({ message: 'Scraper started. Processing in the background.' });
+
+  // Run the scraper in the background with the provided URL
+    exec(`node /app/webmap/src/index.js ${urlToScrape}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            // Handle error (e.g., store in a log, notify admin, etc.)
+            return;
+        }
+        console.log('Scraper executed successfully.');
+        // Store results or notify frontend if necessary
+    });
+});
+
+
 
 // API endpoint to receive tracking data
 app.post('/api/track', async (req, res) => {
@@ -109,19 +168,19 @@ app.post('/api/track', async (req, res) => {
         res.status(500).send('Error saving data: ' + error);
     }
 });
+
+
 // API Endpoint to store web map data
 app.post('/api/store-webmap', async (req, res) => {
   console.log('Received web map data:', req.body);
   try {
-      const existingData = await WebMapData.findOne({ url: req.body.url });       // Check if data for the URL already exists
+      const existingData = await WebMapData.findOne({ name: req.body.name });  // Check if data for the URL already exists
 
       if (existingData) {
-          existingData.links = req.body.links;           // Update existing record
-
+          existingData.children = req.body.children;  // Update existing record
           await existingData.save();
       } else {
-          const webMapData = new WebMapData(req.body);           // Insert new record
-
+          const webMapData = new WebMapData(req.body);  // Insert new record
           await webMapData.save();
       }
       res.status(200).send('Web map data received and saved');
@@ -130,6 +189,43 @@ app.post('/api/store-webmap', async (req, res) => {
       res.status(500).send('Error saving web map data: ' + error);
   }
 });
+
+// API endpoint to get web map data for a specific URL
+app.get('/api/get-webmap', async (req, res) => {
+  const targetName = req.query.name;  // Using name instead of URL
+  try {
+      const webMapData = targetName ? await WebMapData.findOne({ name: targetName }) : await WebMapData.find();
+      res.status(200).json(webMapData);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching web map data: ' + error);
+  }
+});
+
+/*
+app.get('/api/get-webmap-by-title', async (req, res) => {
+  const targetTitle = req.query.title;
+  try {
+      const webMapData = targetTitle ? await WebMapData.find({ title: targetTitle }) : await WebMapData.find();
+      res.status(200).json(webMapData);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching web map data by title: ' + error);
+  }
+});
+*/
+
+app.delete('/api/delete-webmap', async (req, res) => {
+  const targetUrl = req.query.url;
+  try {
+      await WebMapData.deleteOne({ url: targetUrl });
+      res.status(200).send('Web map data deleted successfully');
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error deleting web map data: ' + error);
+  }
+});
+
 
 // API endpoint to get drop-off rate
 app.get('/api/dropoff-rate', async (req, res) => {
@@ -193,6 +289,7 @@ app.get('/api/visitors', async (req, res) => {
 });
 
 app.get('/api/heatmap', async (req, res) => {
+  
   console.log('Visitor Data requested');
   try{
     const response = await TrackingData.find({
@@ -207,7 +304,10 @@ app.get('/api/heatmap', async (req, res) => {
   }
 });
 
-app.use(express.static('public'));
+// Root endpoint
+app.get('/', (req, res) => {
+  res.send('Backend server is running');
+});
 
 // Start the server
 const PORT = 8000;
@@ -215,8 +315,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.send('Backend server is running');
-});
 
