@@ -58,10 +58,33 @@ const trackingSchema = new mongoose.Schema({
     timestamp: {
       type: Date,
       default: Date.now
-    }
+  },
+  journeyStarted: {
+      type: Number,
+      default: 0
+  },
+  dropOff: {
+      type: Number,
+      default: 0
+  },
+  bounce: {
+    type: Number,
+    default: 0
+  },
+  activeInteraction: {
+  type: Boolean,
+  default: false
+  },
+
 });
 
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
+
+const webMapSchema = new mongoose.Schema({
+  url: String,
+  links: [String]
+});
+const WebMapData = mongoose.model('WebMapData', webMapSchema);
 
 // API endpoint to receive tracking data
 app.post('/api/track', async (req, res) => {
@@ -69,12 +92,88 @@ app.post('/api/track', async (req, res) => {
     try {
       const trackingData = new TrackingData(req.body);
       await trackingData.save();
+
+      // Handle activeInteraction event
+      if (req.body.eventType === 'activeInteraction') {
+        await TrackingData.updateOne({}, { $inc: { activeInteractions: 1 } });
+    }
+      // Handle journeyStarted and dropOff events
+      if (req.body.eventType === 'journeyStarted') {
+        await TrackingData.updateOne({}, { $inc: { journeyStarted: 1 } });
+    } else if (req.body.eventType === 'dropOff') {
+        await TrackingData.updateOne({}, { $inc: { dropOff: 1 } });
+    }
       res.status(200).send('Data received and saved');
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error saving data: ' + error);
     }
 });
+// API Endpoint to store web map data
+app.post('/api/store-webmap', async (req, res) => {
+  console.log('Received web map data:', req.body);
+  try {
+      const existingData = await WebMapData.findOne({ url: req.body.url });       // Check if data for the URL already exists
+
+      if (existingData) {
+          existingData.links = req.body.links;           // Update existing record
+
+          await existingData.save();
+      } else {
+          const webMapData = new WebMapData(req.body);           // Insert new record
+
+          await webMapData.save();
+      }
+      res.status(200).send('Web map data received and saved');
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error saving web map data: ' + error);
+  }
+});
+
+// API endpoint to get drop-off rate
+app.get('/api/dropoff-rate', async (req, res) => {
+  try {
+      const totalJourneyStarted = await TrackingData.aggregate([{ $sum: "$journeyStarted" }]);
+      const totalDropOffs = await TrackingData.aggregate([{ $sum: "$dropOff" }]);
+      
+      const dropOffRate = (totalDropOffs / totalJourneyStarted) * 100;
+      
+      if (req.body.eventType === 'bounce') {
+        await TrackingData.updateOne({}, { $inc: { bounce: 1 } });
+    }
+      
+      res.status(200).json({ dropOffRate: dropOffRate });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching data: ' + error);
+  }
+});
+
+// modified API endpoint to get web map data for a specific URL
+app.get('/api/get-webmap', async (req, res) => {
+  const targetUrl = req.query.url;
+  try {
+      const webMapData = targetUrl ? await WebMapData.find({ url: targetUrl }) : await WebMapData.find();
+      res.status(200).json(webMapData);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching web map data: ' + error);
+  }
+});
+
+/*
+// API endpoint to get active interactions count
+app.get('/api/active-interactions', async (req, res) => {
+    try {
+        const totalActiveInteractions = await TrackingData.aggregate([{ $sum: "$activeInteractions" }]);
+        res.status(200).json({ totalActiveInteractions: totalActiveInteractions[0].activeInteractions });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error fetching data: ' + error);
+    }
+});
+*/
 
 app.get('/api/visitors', async (req, res) => {
   console.log('Visitor Data requested');
