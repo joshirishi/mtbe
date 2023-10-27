@@ -22,6 +22,10 @@ app.use(express.json());
 // Define a Mongoose schema and model for tracking data
 const trackingSchema = new mongoose.Schema({
     eventType: String,
+    location :{
+      domain: String,
+      page: String,
+    },
     x: Number,
     y: Number,
     clickCount: Number,
@@ -76,8 +80,29 @@ app.get('/api/visitors', async (req, res) => {
   console.log('Visitor Data requested');
   try{
     const uniqueVisitorCount = await TrackingData.count({eventType:'new-visitor'});
-    res.status(200).send({uniqueVisitorCount: uniqueVisitorCount});
+    const bounceCount = await TrackingData.count({eventType:'bounce'});
+    const visitorCount = await TrackingData.count({eventType:'visitor'});
+    res.status(200).send({
+      uniqueVisitorCount: uniqueVisitorCount,
+      bounceRate: (bounceCount/visitorCount)*100,
+      visitorCount: visitorCount
+    });
   }catch (error){
+    console.error('Error:', error);
+    res.status(500).send('Error retreiving data: ' + error);
+  }
+});
+
+app.get('/api/heatmap', async (req, res) => {
+  console.log('Visitor Data requested');
+  try{
+    const response = await TrackingData.find({
+      $and: [
+         { "location.domain" : { $eq: "localhost" } },
+         {"heatmapData": { $exists: true }}
+    ]});
+    res.status(200).send(response);
+  } catch (error){
     console.error('Error:', error);
     res.status(500).send('Error retreiving data: ' + error);
   }
@@ -95,3 +120,4 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('Backend server is running');
 });
+
