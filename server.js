@@ -12,15 +12,18 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Middleware to parse JSON
 app.use(express.static('public')); // Serve static files from the 'public' directory
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json({ limit: '50mb' })); // Increase the limit to 50mb or as needed
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // MongoDB Connection
-mongoose.connect('mongodb://db:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-    if (err) {
+mongoose.connect('mongodb://db:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => {
         console.error('Error connecting to MongoDB:', err);
-    } else {
-        console.log('Connected to MongoDB');
-    }
-});
+        process.exit(1);
+    });
 
 // Define a Mongoose schema and model for tracking data
 const trackingSchema = new mongoose.Schema({
@@ -81,6 +84,24 @@ const trackingSchema = new mongoose.Schema({
 
 });
 
+const mongoose = require('mongoose');
+
+const rrwebEventSchema = new mongoose.Schema({
+  data: Object, // Store the rrweb event data
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const RRWebEvent = mongoose.model('RRWebEvent', rrwebEventSchema);
+
+module.exports = RRWebEvent;
+
+
+
+//tracking implementation part
+
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
 
 
@@ -88,13 +109,15 @@ const TrackingData = mongoose.model('TrackingData', trackingSchema);
 // Schema for hierarchical data
 const linkSchema = new mongoose.Schema({
   name: String,
-  children: [this]
+  children: [linkSchema],
+  screenshot: Buffer, // Field to store the screenshot
+  title: String,      // Field to store the page title
 });
 
 const WebMapData = mongoose.model('WebMapData', linkSchema);
 
 
-
+/*
 // Create a new HTTP server for WebSocket
 const wsServer = http.createServer((req, res) => {
   res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -120,8 +143,38 @@ const WS_PORT = 8001;
 wsServer.listen(WS_PORT, () => {
   console.log(`WebSocket Server running on port ${WS_PORT}`);
 });
+*/
 
 //API endpoints
+
+
+//API endpoint to receive the recorded events from the frontend.
+
+app.post('/api/rrweb-record', async (req, res) => {
+    try {
+      const rrwebEvent = req.body;
+      // You can store the event in the database or process it as needed
+      // For example, you might have a model called RRWebEvent
+      const newEvent = new RRWebEvent(rrwebEvent);
+      await newEvent.save();
+      res.status(200).send('RRWeb event recorded successfully');
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error recording RRWeb event: ' + error);
+    }
+  });
+
+  //API Endpoint for Retrieving Events
+
+  app.get('/api/rrweb-replay', async (req, res) => {
+    try {
+      const events = await RRWebEvent.find().sort({ timestamp: 1 }); // Retrieve events in order
+      res.status(200).json(events);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error fetching RRWeb events: ' + error);
+    }
+  });
 
 // API endpoint to trigger the scraper
 
@@ -172,22 +225,31 @@ app.post('/api/track', async (req, res) => {
 
 // API Endpoint to store web map data
 app.post('/api/store-webmap', async (req, res) => {
-  console.log('Received web map data:', req.body);
-  try {
-      const existingData = await WebMapData.findOne({ name: req.body.name });  // Check if data for the URL already exists
+    console.log('Received web map data:', req.body);
+    try {
+        const existingData = await WebMapData.findOne({ name: req.body.name });  // Check if data for the URL already exists
 
-      if (existingData) {
-          existingData.children = req.body.children;  // Update existing record
-          await existingData.save();
-      } else {
-          const webMapData = new WebMapData(req.body);  // Insert new record
-          await webMapData.save();
-      }
-      res.status(200).send('Web map data received and saved');
-  } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Error saving web map data: ' + error);
-  }
+        if (existingData) {
+            // Update existing record
+            existingData.children = req.body.children;
+            existingData.screenshot = req.body.screenshot; // Update screenshot
+            existingData.title = req.body.title;           // Update title
+            await existingData.save();
+        } else {
+            // Insert new record
+            const webMapData = new WebMapData({
+                name: req.body.name,
+                children: req.body.children,
+                screenshot: req.body.screenshot,
+                title: req.body.title
+            });
+            await webMapData.save();
+        }
+        res.status(200).send('Web map data received and saved');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error saving web map data: ' + error);
+    }
 });
 
 // API endpoint to get web map data for a specific URL
