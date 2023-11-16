@@ -230,9 +230,7 @@ app.delete('/api/delete-webmap', async (req, res) => {
 // API endpoint to get drop-off rate
 app.get('/api/dropoff-rate', async (req, res) => {
   try {
-    const totalJourneyStarted = await TrackingData.aggregate([
-        { $group: { _id: null, total: { $sum: "$journeyStarted" } } }
-      ]);
+      const totalJourneyStarted = await TrackingData.aggregate([{ $sum: "$journeyStarted" }]);
       const totalDropOffs = await TrackingData.aggregate([{ $sum: "$dropOff" }]);
       
       const dropOffRate = (totalDropOffs / totalJourneyStarted) * 100;
