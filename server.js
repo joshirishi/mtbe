@@ -83,11 +83,11 @@ const trackingSchema = new mongoose.Schema({
 
 const TrackingData = mongoose.model('TrackingData', trackingSchema);
 
-
-
-// Schema for hierarchical data
+// Schema for hierarchical data with websiteId
 const linkSchema = new mongoose.Schema({
+  websiteId: String, // Add this field for data segregation
   name: String,
+  url: String, // Added to store the URL
   children: [this]
 });
 
@@ -170,11 +170,11 @@ app.post('/api/track', async (req, res) => {
 });
 
 
-// API Endpoint to store web map data
+// Modified API Endpoint to store web map data with websiteId
 app.post('/api/store-webmap', async (req, res) => {
   console.log('Received web map data:', req.body);
   try {
-      const existingData = await WebMapData.findOne({ name: req.body.name });  // Check if data for the URL already exists
+      const existingData = await WebMapData.findOne({ websiteId: req.body.websiteId, url: req.body.url });  // Check by websiteId and URL
 
       if (existingData) {
           existingData.children = req.body.children;  // Update existing record
@@ -190,11 +190,11 @@ app.post('/api/store-webmap', async (req, res) => {
   }
 });
 
-// API endpoint to get web map data for a specific URL
+// Modified API endpoint to get web map data for a specific websiteId
 app.get('/api/get-webmap', async (req, res) => {
-  const targetName = req.query.name;  // Using name instead of URL
+  const websiteId = req.query.websiteId;
   try {
-      const webMapData = targetName ? await WebMapData.findOne({ name: targetName }) : await WebMapData.find();
+      const webMapData = websiteId ? await WebMapData.find({ websiteId: websiteId }) : await WebMapData.find();
       res.status(200).json(webMapData);
   } catch (error) {
       console.error('Error:', error);
