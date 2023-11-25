@@ -5,7 +5,7 @@ const TrackingData = require('./models/TrackingData'); // Adjust to your actual 
 mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const domain = 'https://example.com';
-const pages = ['/home', '/about', '/products', '/contact', '/faq'];
+const pages = ['/home', '/about', '/products', '/contact', '/faq' , '/blog' , '/blog1', '/blog2'];
 
 const generateFakeData = () => {
   let navigationPath = [];
@@ -18,13 +18,14 @@ const generateFakeData = () => {
     navigationPath.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
   }
 
-  if (pageCount < 3) {
+  if (pageCount === 1) {
     bounce = true;
+    navigationPath = [];
   }
 
   if (faker.datatype.boolean() && pageCount > 1) {
-    dropOffPage = navigationPath.pop();
-    navigationPath = [];
+    dropOffPage = navigationPath[pageCount - 1];
+    navigationPath = navigationPath.slice(0, pageCount - 1);
   }
 
   return {
@@ -38,7 +39,7 @@ const generateFakeData = () => {
     clickCount: faker.datatype.number(10),
     scrollDepth: faker.datatype.number({ min: 0, max: 100 }),
     scrollDirection: faker.random.arrayElement(['up', 'down']),
-    currentPage: navigationPath[navigationPath.length - 1] || domain + pages[0],
+    currentPage: navigationPath.length > 0 ? navigationPath[navigationPath.length - 1] : domain + pages[0],
     timeSpentOnPage: faker.datatype.number({ min: 0, max: 10000 }),
     newVisitor: faker.datatype.boolean(),
     activeUsers: faker.datatype.number(50),
