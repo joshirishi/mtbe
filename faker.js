@@ -1,64 +1,61 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
-const TrackingData = require('./models/TrackingData'); // Adjust to your actual model path
-const WebMapData = require('./models/WebMapData'); // Ensure this model exists
+const TrackingData = require('./models/TrackingData');
+const WebMapData = require('./models/WebMapData');
+
 mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true });
-
-const domain = 'https://example.com';
-const pages = ['/home', '/about', '/products', '/contact', '/faq' , '/blog' , '/blog1', '/blog2'];
-
-const generateFakeData = () => {
-  let navigationPath = [];
-  let dropOffPage = '';
-  let bounce = false;
 
 const domain = 'https://example.com';
 const pages = ['/home', '/about', '/products', '/contact', '/faq', '/blog', '/blog1', '/blog2'];
 const maxDepth = 3;
 
 const generateWebMap = (currentDepth = 0, parentUrl = domain) => {
-  if (currentDepth > maxDepth) {
-    return null;
-  }
-
-  const pagePath = pages[faker.datatype.number({ min: 0, max: pages.length - 1 })];
-  const currentUrl = parentUrl + pagePath;
-  const children = [];
-
-  if (faker.datatype.boolean()) {
-    const childCount = faker.datatype.number({ min: 1, max: 3 });
-    for (let i = 0; i < childCount; i++) {
-      const childData = generateWebMap(currentDepth + 1, currentUrl);
-      if (childData) {
-        children.push(childData);
-      }
+    if (currentDepth > maxDepth) {
+        return null;
     }
-  }
 
-  return {
-    websiteId: `${domain.replace('https://', '')}-username`,
-    name: faker.lorem.words(),
-    url: currentUrl,
-    children
-  };
+    const pagePath = pages[faker.datatype.number({ min: 0, max: pages.length - 1 })];
+    const currentUrl = parentUrl + pagePath;
+    const children = [];
+
+    if (faker.datatype.boolean()) {
+        const childCount = faker.datatype.number({ min: 1, max: 3 });
+        for (let i = 0; i < childCount; i++) {
+            const childData = generateWebMap(currentDepth + 1, currentUrl);
+            if (childData) {
+                children.push(childData);
+            }
+        }
+    }
+
+    return {
+        websiteId: `${domain.replace('https://', '')}-username`,
+        name: faker.lorem.words(),
+        url: currentUrl,
+        children
+    };
 };
 
+const generateFakeData = () => {
+    let navigationPath = [];
+    let dropOffPage = '';
+    let bounce = false;
 
-  const pageCount = faker.datatype.number({ min: 1, max: 10 });
+    const pageCount = faker.datatype.number({ min: 1, max: 10 });
 
-  for (let i = 0; i < pageCount; i++) {
-    navigationPath.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
-  }
+    for (let i = 0; i < pageCount; i++) {
+        navigationPath.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
+    }
 
-  if (pageCount === 1) {
-    bounce = true;
-    navigationPath = [];
-  }
+    if (pageCount === 1) {
+        bounce = true;
+        navigationPath = [];
+    }
 
-  if (faker.datatype.boolean() && pageCount > 1) {
-    dropOffPage = navigationPath[pageCount - 1];
-    navigationPath = navigationPath.slice(0, pageCount - 1);
-  }
+    if (faker.datatype.boolean() && pageCount > 1) {
+        dropOffPage = navigationPath[pageCount - 1];
+        navigationPath = navigationPath.slice(0, pageCount - 1);
+    }
 
   return {
     eventType: faker.random.arrayElement(['click', 'scroll', 'navigation']),
@@ -113,8 +110,8 @@ const insertFakeData = async () => {
 
   // Continue inserting user tracking data
   for (let i = 0; i < 200; i++) {
-    const newTrackingData = new TrackingData(generateFakeData());
-    await newTrackingData.save();
+      const newTrackingData = new TrackingData(generateFakeData());
+      await newTrackingData.save();
   }
   console.log('200 fake tracking data records inserted!');
 };
