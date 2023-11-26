@@ -1,7 +1,7 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
 const TrackingData = require('./models/TrackingData'); // Adjust to your actual model path
-
+const WebMapData = require('./models/WebMapData'); // Ensure this model exists
 mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const domain = 'https://example.com';
@@ -11,6 +11,38 @@ const generateFakeData = () => {
   let navigationPath = [];
   let dropOffPage = '';
   let bounce = false;
+
+const domain = 'https://example.com';
+const pages = ['/home', '/about', '/products', '/contact', '/faq', '/blog', '/blog1', '/blog2'];
+const maxDepth = 3;
+
+const generateWebMap = (currentDepth = 0, parentUrl = domain) => {
+  if (currentDepth > maxDepth) {
+    return null;
+  }
+
+  const pagePath = pages[faker.datatype.number({ min: 0, max: pages.length - 1 })];
+  const currentUrl = parentUrl + pagePath;
+  const children = [];
+
+  if (faker.datatype.boolean()) {
+    const childCount = faker.datatype.number({ min: 1, max: 3 });
+    for (let i = 0; i < childCount; i++) {
+      const childData = generateWebMap(currentDepth + 1, currentUrl);
+      if (childData) {
+        children.push(childData);
+      }
+    }
+  }
+
+  return {
+    websiteId: `${domain.replace('https://', '')}-username`,
+    name: faker.lorem.words(),
+    url: currentUrl,
+    children
+  };
+};
+
 
   const pageCount = faker.datatype.number({ min: 1, max: 10 });
 
@@ -74,11 +106,17 @@ const generateFakeData = () => {
 };
 
 const insertFakeData = async () => {
+  // Generate and insert one hierarchical web map data entry
+  const webMapData = new WebMapData(generateWebMap());
+  await webMapData.save();
+  console.log('One fake web map data record inserted!');
+
+  // Continue inserting user tracking data
   for (let i = 0; i < 200; i++) {
     const newTrackingData = new TrackingData(generateFakeData());
     await newTrackingData.save();
   }
-  console.log('200 fake data records inserted!');
+  console.log('200 fake tracking data records inserted!');
 };
 
 insertFakeData().then(() => mongoose.disconnect());
