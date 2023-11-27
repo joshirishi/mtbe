@@ -45,4 +45,6 @@ const trackingSchema = new mongoose.Schema({
     activeInteraction: Boolean,
 });
 
-module.exports = mongoose.model('TrackingData', trackingSchema);
+const TrackingData = mongoose.models.TrackingData || mongoose.model('TrackingData', trackingSchema);
+
+module.exports = TrackingData;

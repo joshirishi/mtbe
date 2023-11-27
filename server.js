@@ -93,7 +93,9 @@ const linkSchema = new mongoose.Schema({
 
 const WebMapData = mongoose.model('WebMapData', linkSchema);
 
-
+// Import and setup the joint data API
+const setupJointDataApi = require('./jointDataApi');
+setupJointDataApi(app);
 
 // Create a new HTTP server for WebSocket
 const wsServer = http.createServer((req, res) => {

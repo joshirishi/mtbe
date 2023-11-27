@@ -12,4 +12,6 @@ const webMapSchema = new mongoose.Schema({
     }]
 });
 
-module.exports = mongoose.model('WebMapData', webMapSchema);
+const WebMapData = mongoose.models.WebMapData || mongoose.model('WebMapData', webMapSchema);
+
+module.exports = WebMapData;
