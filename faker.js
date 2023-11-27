@@ -8,44 +8,54 @@ mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true
 const domain = 'https://example.com';
 const pages = ['/home', '/about', '/products', '/contact', '/faq', '/blog', '/blog1', '/blog2'];
 const maxDepth = 3;
+const allUrls = [];
 
-const generateWebMap = (currentDepth = 0, parentUrl = domain) => {
-    if (currentDepth > maxDepth) {
+const generateUrls = () => {
+    for (let i = 0; i < 30; i++) {
+        allUrls.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
+    }
+};
+
+const generateWebMap = (currentDepth = 0, index = 0) => {
+    if (currentDepth > maxDepth || index >= allUrls.length) {
         return null;
     }
 
-    const pagePath = pages[faker.datatype.number({ min: 0, max: pages.length - 1 })];
-    const currentUrl = parentUrl + pagePath;
+    const currentUrl = allUrls[index];
     const children = [];
 
     if (faker.datatype.boolean()) {
         const childCount = faker.datatype.number({ min: 1, max: 3 });
         for (let i = 0; i < childCount; i++) {
-            const childData = generateWebMap(currentDepth + 1, currentUrl);
+            const childData = generateWebMap(currentDepth + 1, index + i + 1);
             if (childData) {
                 children.push(childData);
             }
         }
     }
 
+
     return {
-        websiteId: `${domain.replace('https://', '')}-username`,
-        name: faker.lorem.words(),
-        url: currentUrl,
-        children
-    };
+      websiteId: `${domain.replace('https://', '')}-username`,
+      name: faker.lorem.words(),
+      url: currentUrl,
+      children
+  };
 };
 
 const generateFakeData = () => {
-    let navigationPath = [];
+  let navigationPath = [];
+
+  const pageCount = faker.datatype.number({ min: 1, max: allUrls.length });
+  for (let i = 0; i < pageCount; i++) {
+      navigationPath.push(allUrls[i]);
+  }
+
+
     let dropOffPage = '';
     let bounce = false;
 
-    const pageCount = faker.datatype.number({ min: 1, max: 10 });
-
-    for (let i = 0; i < pageCount; i++) {
-        navigationPath.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
-    }
+  
 
     if (pageCount === 1) {
         bounce = true;
@@ -103,12 +113,12 @@ const generateFakeData = () => {
 };
 
 const insertFakeData = async () => {
-  // Generate and insert one hierarchical web map data entry
+  generateUrls();
+
   const webMapData = new WebMapData(generateWebMap());
   await webMapData.save();
   console.log('One fake web map data record inserted!');
 
-  // Continue inserting user tracking data
   for (let i = 0; i < 200; i++) {
       const newTrackingData = new TrackingData(generateFakeData());
       await newTrackingData.save();
