@@ -35,40 +35,31 @@ const createWebMapStructure = () => {
     };
 };
 
-
-// Function to extract all URLs from the web map structure
 const getAllUrlsFromWebMap = (node) => {
-  let urls = [node.url];
-  node.children.forEach(child => {
-      urls = urls.concat(getAllUrlsFromWebMap(child));
-  });
-  return urls;
+    let urls = [node.url];
+    node.children.forEach(child => {
+        urls = urls.concat(getAllUrlsFromWebMap(child));
+    });
+    return urls;
 };
 
-// Generate web map structure and extract all URLs
 const webMapStructure = createWebMapStructure();
 const allWebMapUrls = getAllUrlsFromWebMap(webMapStructure);
 
-
 const generateFakeData = () => {
-  let navigationPath = [];
-  const pageCount = faker.datatype.number({ min: 1, max: allWebMapUrls.length });
-  for (let i = 0; i < pageCount; i++) {
-      navigationPath.push(allWebMapUrls[faker.datatype.number({ min: 0, max: allWebMapUrls.length - 1 })]);
-  }
-
+    let navigationPath = [];
+    const pageCount = faker.datatype.number({ min: 1, max: allWebMapUrls.length });
+    for (let i = 0; i < pageCount; i++) {
+        navigationPath.push(allWebMapUrls[faker.datatype.number({ min: 0, max: allWebMapUrls.length - 1 })]);
+    }
 
     let dropOffPage = '';
     let bounce = false;
 
-  
-
     if (pageCount === 1) {
         bounce = true;
         navigationPath = [];
-    }
-
-    if (faker.datatype.boolean() && pageCount > 1) {
+    } else if (faker.datatype.boolean() && pageCount > 1) {
         dropOffPage = navigationPath[pageCount - 1];
         navigationPath = navigationPath.slice(0, pageCount - 1);
     }
