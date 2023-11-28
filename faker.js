@@ -6,49 +6,55 @@ const WebMapData = require('./models/WebMapData');
 mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const domain = 'https://example.com';
-const pages = ['/home', '/about', '/products', '/contact', '/faq', '/blog', '/blog1', '/blog2'];
-const maxDepth = 3;
-const allUrls = [];
 
-const generateUrls = () => {
-    for (let i = 0; i < 30; i++) {
-        allUrls.push(domain + pages[faker.datatype.number({ min: 0, max: pages.length - 1 })]);
-    }
-};
-
-const generateWebMap = (currentDepth = 0, index = 0) => {
-    if (currentDepth > maxDepth || index >= allUrls.length) {
-        return null;
-    }
-
-    const currentUrl = allUrls[index];
+const createWebMapStructure = () => {
     const children = [];
-
-    if (faker.datatype.boolean()) {
-        const childCount = faker.datatype.number({ min: 1, max: 3 });
-        for (let i = 0; i < childCount; i++) {
-            const childData = generateWebMap(currentDepth + 1, index + i + 1);
-            if (childData) {
-                children.push(childData);
-            }
+    for (let i = 1; i <= 10; i++) {
+        const grandchildren = [];
+        for (let j = 1; j <= 3; j++) {
+            grandchildren.push({
+                websiteId: `${domain.replace('https://', '')}-username`,
+                name: `Grandchild ${i}-${j}`,
+                url: `${domain}/child${i}/grandchild${j}`,
+                children: []
+            });
         }
+        children.push({
+            websiteId: `${domain.replace('https://', '')}-username`,
+            name: `Child ${i}`,
+            url: `${domain}/child${i}`,
+            children: grandchildren
+        });
     }
-
 
     return {
-      websiteId: `${domain.replace('https://', '')}-username`,
-      name: faker.lorem.words(),
-      url: currentUrl,
-      children
-  };
+        websiteId: `${domain.replace('https://', '')}-username`,
+        name: 'Root',
+        url: domain,
+        children: children
+    };
 };
+
+
+// Function to extract all URLs from the web map structure
+const getAllUrlsFromWebMap = (node) => {
+  let urls = [node.url];
+  node.children.forEach(child => {
+      urls = urls.concat(getAllUrlsFromWebMap(child));
+  });
+  return urls;
+};
+
+// Generate web map structure and extract all URLs
+const webMapStructure = createWebMapStructure();
+const allWebMapUrls = getAllUrlsFromWebMap(webMapStructure);
+
 
 const generateFakeData = () => {
   let navigationPath = [];
-
-  const pageCount = faker.datatype.number({ min: 1, max: allUrls.length });
+  const pageCount = faker.datatype.number({ min: 1, max: allWebMapUrls.length });
   for (let i = 0; i < pageCount; i++) {
-      navigationPath.push(allUrls[i]);
+      navigationPath.push(allWebMapUrls[faker.datatype.number({ min: 0, max: allWebMapUrls.length - 1 })]);
   }
 
 
@@ -71,14 +77,14 @@ const generateFakeData = () => {
     eventType: faker.random.arrayElement(['click', 'scroll', 'navigation']),
     location: {
       domain: domain,
-      page: navigationPath[navigationPath.length - 1] || domain + pages[0],
+      page: navigationPath[navigationPath.length - 1] || allWebMapUrls[0],
     },
     x: faker.datatype.number({ min: 0, max: 1920 }),
     y: faker.datatype.number({ min: 0, max: 1080 }),
     clickCount: faker.datatype.number(10),
     scrollDepth: faker.datatype.number({ min: 0, max: 100 }),
     scrollDirection: faker.random.arrayElement(['up', 'down']),
-    currentPage: navigationPath.length > 0 ? navigationPath[navigationPath.length - 1] : domain + pages[0],
+    currentPage: navigationPath.length > 0 ? navigationPath[navigationPath.length - 1] : allWebMapUrls[0],
     timeSpentOnPage: faker.datatype.number({ min: 0, max: 10000 }),
     newVisitor: faker.datatype.boolean(),
     activeUsers: faker.datatype.number(50),
@@ -112,12 +118,11 @@ const generateFakeData = () => {
   };
 };
 
+// Function to insert the generated data into MongoDB
 const insertFakeData = async () => {
-  generateUrls();
-
-  const webMapData = new WebMapData(generateWebMap());
+  const webMapData = new WebMapData(webMapStructure);
   await webMapData.save();
-  console.log('One fake web map data record inserted!');
+  console.log('Web map data record inserted!');
 
   for (let i = 0; i < 200; i++) {
       const newTrackingData = new TrackingData(generateFakeData());
