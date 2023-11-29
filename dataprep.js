@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const WebMapData = require('./models/WebMapData'); // Path to your WebMapData model
-const TrackingData = require('./models/TrackingData'); // Path to your TrackingData model
-const FinalData = require('./models/FinalData'); // Adjust the path according to your project structure
+const WebMapData = require('./models/WebMapData'); // Adjust the path to your model
+const TrackingData = require('./models/TrackingData'); // Adjust the path to your model
+const FinalData = require('./models/FinalData'); // Adjust the path to your model
+const url = require('url');
 
-
-// Connect to MongoDB (replace with your actual connection string)
+// MongoDB Connection
 const mongoDBUri = 'mongodb://localhost:27017/trackingDB';
 mongoose.connect(mongoDBUri, {
   useNewUrlParser: true,
@@ -13,61 +13,65 @@ mongoose.connect(mongoDBUri, {
 
 // Function to fetch data from MongoDB
 async function fetchWebMapAndTrackingData() {
-    try {
-      const webMapData = await WebMapData.findOne({ websiteId: 'example.com-username' }).exec();
-      const trackingData = await TrackingData.find().exec();
-      return { webMapData, trackingData };
-    } catch (error) {
-      console.error('Error fetching data from MongoDB:', error);
-      throw error;
-    }
+  try {
+    const webMapData = await WebMapData.findOne({ websiteId: 'example.com-username' }).exec();
+    const trackingData = await TrackingData.find().exec();
+    return { webMapData, trackingData };
+  } catch (error) {
+    console.error('Error fetching data from MongoDB:', error);
+    throw error;
   }
-
-// Function to fetch data from MongoDB
-function attachWeightsToWebMap(webMapData, trackingData) {
-    const linkVisitorCounts = {};
-  
-    // Calculate link visitor counts
-    trackingData.forEach(userPath => {
-        if (userPath.navigationPath && userPath.navigationPath.length > 0) {
-            userPath.navigationPath.reduce((prevPage, currentPage) => {
-                const linkKey = `${prevPage}->${currentPage}`;
-                if (!linkVisitorCounts[linkKey]) {
-                    linkVisitorCounts[linkKey] = new Set();
-                }
-                linkVisitorCounts[linkKey].add(userPath.visitorId);
-                return currentPage;
-            }, userPath.navigationPath[0]);
-        }
-    });
-
-
-    // Log to check the counts for each link
-    console.log("Link Visitor Counts:", Object.fromEntries(
-        Object.entries(linkVisitorCounts).map(([key, value]) => [key, value.size])
-    ));
-
-    // A recursive function to traverse the web map hierarchy and attach weights
-    const traverseAndAttachWeights = (node, parentUrl = null) => {
-        if (parentUrl) {
-            node.parentUrl = parentUrl;
-        }
-
-        const linkKey = parentUrl ? `${parentUrl}->${node.url}` : '';
-        node.weight = parentUrl && linkVisitorCounts[linkKey] ? linkVisitorCounts[linkKey].size : 0;
-
-        console.log(`Node URL: ${node.url}, Weight: ${node.weight}`);
-
-        if (node.children && node.children.length > 0) {
-            node.children.forEach(child => traverseAndAttachWeights(child, node.url));
-        }
-    };
-
-    // Start the recursive traversal and weight attachment
-    traverseAndAttachWeights(webMapData);
-    return webMapData;
 }
 
+// Function to get the base path from a URL
+function getBasePath(inputUrl) {
+  const parsedUrl = new URL(inputUrl);
+  const pathSegments = parsedUrl.pathname.split('/').filter(segment => segment);
+  return pathSegments.length > 0
+    ? `${parsedUrl.protocol}//${parsedUrl.host}/${pathSegments[0]}`
+    : `${parsedUrl.protocol}//${parsedUrl.host}`;
+}
+
+// Function to attach weights to web map data
+function attachWeightsToWebMap(webMapData, trackingData) {
+  // Aggregate navigation paths into a graph structure
+  const navigationGraph = trackingData.reduce((acc, record) => {
+    if (record.navigationPath) {
+      for (let i = 0; i < record.navigationPath.length - 1; i++) {
+        const fromPage = getBasePath(record.navigationPath[i]);
+        const toPage = getBasePath(record.navigationPath[i + 1]);
+
+        if (!acc[fromPage]) {
+          acc[fromPage] = {};
+        }
+
+        if (!acc[fromPage][toPage]) {
+          acc[fromPage][toPage] = 0;
+        }
+
+        acc[fromPage][toPage] += 1;
+      }
+    }
+    return acc;
+  }, {});
+
+  // Apply the navigation graph weights to the web map data
+  const applyWeights = (node, parentUrl = null) => {
+    if (node.url && parentUrl) {
+      const linkKey = `${parentUrl}->${node.url}`;
+      node.weight = navigationGraph[parentUrl] && navigationGraph[parentUrl][node.url]
+        ? navigationGraph[parentUrl][node.url]
+        : 0;
+    }
+
+    if (node.children) {
+      node.children.forEach(child => applyWeights(child, node.url));
+    }
+  };
+
+  applyWeights(webMapData, null);
+  return webMapData;
+}
 
 // calculate backtracking or use of back button - how many people are backtracking have width measure to show number
 
@@ -104,7 +108,7 @@ function calculateBacktracking(trackingData) {
     return backtrackingMap;
   }
 
-
+  
 async function prepareChartData() {
     const { webMapData, trackingData } = await fetchWebMapAndTrackingData();
   
