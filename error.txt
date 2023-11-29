@@ -1,0 +1,351 @@
+node dataprep.js
+Error saving final data: Error: FinalData validation failed: backtracking: Cast to Map failed for value "Map(102) {
+  'https://example.com/child6->https://example.com/child10/grandchild2' => 1,
+  'https://example.com/child3/grandchild1->https://example.com/child1/grandchild1' => 1,
+  'https://example.com/child5->https://example.com/child6/grandchild1' => 1,
+  'https://example.com/child7/grandchild3->https://example.com/child10/grandchild1' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child3/grandchild2' => 1,
+  'https://example.com/child1/grandchild2->https://example.com/child1' => 1,
+  'https://example.com/child6/grandchild1->https://example.com/child1' => 1,
+  'https://example.com/child8->https://example.com/child2' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child10/grandchild3' => 1,
+  'https://example.com/child6/grandchild1->https://example.com/child2/grandchild1' => 1,
+  'https://example.com/child2/grandchild1->https://example.com/child6/grandchild1' => 1,
+  'https://example.com/child9/grandchild2->https://example.com/child6/grandchild1' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child5' => 1,
+  'https://example.com/child7/grandchild3->https://example.com/child2/grandchild1' => 1,
+  'https://example.com/child8/grandchild2->https://example.com/child4/grandchild2' => 1,
+  'https://example.com/child2/grandchild2->https://example.com/child7/grandchild3' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child2/grandchild3' => 1,
+  'https://example.com/child6/grandchild2->https://example.com/child8/grandchild3' => 1,
+  'https://example.com/child1->https://example.com/child6' => 1,
+  'https://example.com/child1->https://example.com/child4' => 1,
+  'https://example.com/child8/grandchild2->https://example.com/child1/grandchild2' => 1,
+  'https://example.com/child5/grandchild3->https://example.com/child7/grandchild3' => 1,
+  'https://example.com/child2->https://example.com/child10/grandchild2' => 1,
+  'https://example.com/child4/grandchild3->https://example.com/child7' => 1,
+  'https://example.com/child2->https://example.com/child8/grandchild1' => 1,
+  'https://example.com/child8/grandchild1->https://example.com/child10/grandchild1' => 1,
+  'https://example.com/child1/grandchild2->https://example.com/child10/grandchild1' => 1,
+  'https://example.com/child5/grandchild2->https://example.com/child9' => 1,
+  'https://example.com/child8/grandchild1->https://example.com/child7/grandchild1' => 1,
+  'https://example.com/child1->https://example.com/child8/grandchild1' => 1,
+  'https://example.com/child3->https://example.com/child8/grandchild1' => 1,
+  'https://example.com/child6->https://example.com/child2' => 1,
+  'https://example.com/child8->https://example.com/child1' => 1,
+  'https://example.com/child1/grandchild1->https://example.com/child6' => 1,
+  'https://example.com/child1->https://example.com/child1/grandchild3' => 1,
+  'https://example.com/child10/grandchild3->https://example.com/child3' => 1,
+  'https://example.com/child2/grandchild2->https://example.com/child6/grandchild1' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child2/grandchild1' => 1,
+  'https://example.com/child2->https://example.com/child1/grandchild3' => 1,
+  'https://example.com/child7/grandchild3->https://example.com/child9/grandchild1' => 1,
+  'https://example.com/child7/grandchild2->https://example.com/child7' => 1,
+  'https://example.com/child9/grandchild3->https://example.com/child10/grandchild2' => 1,
+  'https://example.com/child1/grandchild3->https://example.com/child9/grandchild1' => 1,
+  'https://example.com/child4/grandchild1->https://example.com/child2/grandchild1' => 1,
+  'https://example.com/child9/grandchild3->https://example.com/child7/grandchild3' => 1,
+  'https://example.com/child4/grandchild2->https://example.com/child10' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child2/grandchild1' => 1,
+  'https://example.com->https://example.com/child3/grandchild2' => 1,
+  'https://example.com/child3/grandchild3->https://example.com/child10' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child5/grandchild1' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child8/grandchild1' => 1,
+  'https://example.com/child4/grandchild3->https://example.com/child7/grandchild1' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child2' => 1,
+  'https://example.com/child4/grandchild1->https://example.com/child2' => 1,
+  'https://example.com/child4/grandchild1->https://example.com/child1/grandchild2' => 1,
+  'https://example.com/child3/grandchild2->https://example.com/child6/grandchild2' => 1,
+  'https://example.com/child9/grandchild1->https://example.com/child7/grandchild1' => 1,
+  'https://example.com/child9/grandchild2->https://example.com/child6/grandchild3' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child6/grandchild3' => 1,
+  'https://example.com/child9/grandchild1->https://example.com/child1' => 1,
+  'https://example.com/child9/grandchild3->https://example.com/child7/grandchild1' => 1,
+  'https://example.com/child3/grandchild3->https://example.com/child3/grandchild3' => 1,
+  'https://example.com/child5/grandchild2->https://example.com/child10' => 1,
+  'https://example.com/child4->https://example.com/child1' => 1,
+  'https://example.com/child5/grandchild1->https://example.com/child6/grandchild3' => 1,
+  'https://example.com/child3->https://example.com/child4/grandchild2' => 1,
+  'https://example.com/child1/grandchild1->https://example.com/child8/grandchild3' => 1,
+  'https://example.com/child8->https://example.com/child1/grandchild2' => 1,
+  'https://example.com/child4/grandchild2->https://example.com/child6/grandchild2' => 1,
+  'https://example.com->https://example.com/child4/grandchild3' => 1,
+  'https://example.com/child10->https://example.com/child7' => 1,
+  'https://example.com/child6/grandchild3->https://example.com/child8' => 1,
+  'https://example.com/child10->https://example.com/child9/grandchild1' => 1,
+  'https://example.com/child5/grandchild1->https://example.com/child5' => 1,
+  'https://example.com/child9/grandchild2->https://example.com/child10/grandchild3' => 1,
+  'https://example.com/child8/grandchild2->https://example.com/child9' => 1,
+  'https://example.com/child10/grandchild1->https://example.com/child9/grandchild2' => 1,
+  'https://example.com/child10->https://example.com/child10' => 1,
+  'https://example.com/child2->https://example.com/child2' => 1,
+  'https://example.com/child5/grandchild3->https://example.com/child4/grandchild2' => 1,
+  'https://example.com/child2/grandchild3->https://example.com/child10/grandchild2' => 1,
+  'https://example.com/child6->https://example.com/child7/grandchild3' => 1,
+  'https://example.com/child7->https://example.com/child7' => 1,
+  'https://example.com/child5/grandchild3->https://example.com/child5/grandchild1' => 1,
+  'https://example.com->https://example.com/child4/grandchild2' => 1,
+  'https://example.com/child9->https://example.com/child7/grandchild2' => 1,
+  'https://example.com/child7/grandchild2->https://example.com/child9' => 1,
+  'https://example.com/child3->https://example.com/child3/grandchild3' => 1,
+  'https://example.com/child9/grandchild3->https://example.com/child5/grandchild1' => 1,
+  'https://example.com/child6/grandchild1->https://example.com/child10/grandchild2' => 1,
+  'https://example.com/child8->https://example.com/child6/grandchild2' => 1,
+  'https://example.com/child8/grandchild3->https://example.com/child1' => 1,
+  'https://example.com/child8/grandchild2->https://example.com/child5' => 1,
+  'https://example.com/child4/grandchild3->https://example.com/child9/grandchild1' => 1,
+  'https://example.com/child1/grandchild2->https://example.com/child5/grandchild3' => 1,
+  'https://example.com/child1/grandchild2->https://example.com/child7/grandchild2' => 1,
+  'https://example.com/child2/grandchild2->https://example.com/child8/grandchild3' => 1,
+  'https://example.com/child7->https://example.com/child8/grandchild3' => 1,
+  'https://example.com/child10/grandchild1->https://example.com/child7/grandchild1' => 1,
+  'https://example.com/child5/grandchild2->https://example.com/child4' => 1,
+  ... 2 more items
+}" (type Map) at path "backtracking"
+    at ValidationError.inspect (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/error/validation.js:48:26)
+    at formatValue (node:internal/util/inspect:806:19)
+    at inspect (node:internal/util/inspect:365:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2292:40)
+    at formatWithOptions (node:internal/util/inspect:2154:10)
+    at console.value (node:internal/console/constructor:348:14)
+    at console.warn (node:internal/console/constructor:381:61)
+    at prepareChartData (/Users/rishi/Documents/designalytic2/backend/mtbe/dataprep.js:118:15)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5) {
+  errors: {
+    backtracking: CastError: Cast to Map failed for value "Map(102) {
+      'https://example.com/child6->https://example.com/child10/grandchild2' => 1,
+      'https://example.com/child3/grandchild1->https://example.com/child1/grandchild1' => 1,
+      'https://example.com/child5->https://example.com/child6/grandchild1' => 1,
+      'https://example.com/child7/grandchild3->https://example.com/child10/grandchild1' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child3/grandchild2' => 1,
+      'https://example.com/child1/grandchild2->https://example.com/child1' => 1,
+      'https://example.com/child6/grandchild1->https://example.com/child1' => 1,
+      'https://example.com/child8->https://example.com/child2' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child10/grandchild3' => 1,
+      'https://example.com/child6/grandchild1->https://example.com/child2/grandchild1' => 1,
+      'https://example.com/child2/grandchild1->https://example.com/child6/grandchild1' => 1,
+      'https://example.com/child9/grandchild2->https://example.com/child6/grandchild1' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child5' => 1,
+      'https://example.com/child7/grandchild3->https://example.com/child2/grandchild1' => 1,
+      'https://example.com/child8/grandchild2->https://example.com/child4/grandchild2' => 1,
+      'https://example.com/child2/grandchild2->https://example.com/child7/grandchild3' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child2/grandchild3' => 1,
+      'https://example.com/child6/grandchild2->https://example.com/child8/grandchild3' => 1,
+      'https://example.com/child1->https://example.com/child6' => 1,
+      'https://example.com/child1->https://example.com/child4' => 1,
+      'https://example.com/child8/grandchild2->https://example.com/child1/grandchild2' => 1,
+      'https://example.com/child5/grandchild3->https://example.com/child7/grandchild3' => 1,
+      'https://example.com/child2->https://example.com/child10/grandchild2' => 1,
+      'https://example.com/child4/grandchild3->https://example.com/child7' => 1,
+      'https://example.com/child2->https://example.com/child8/grandchild1' => 1,
+      'https://example.com/child8/grandchild1->https://example.com/child10/grandchild1' => 1,
+      'https://example.com/child1/grandchild2->https://example.com/child10/grandchild1' => 1,
+      'https://example.com/child5/grandchild2->https://example.com/child9' => 1,
+      'https://example.com/child8/grandchild1->https://example.com/child7/grandchild1' => 1,
+      'https://example.com/child1->https://example.com/child8/grandchild1' => 1,
+      'https://example.com/child3->https://example.com/child8/grandchild1' => 1,
+      'https://example.com/child6->https://example.com/child2' => 1,
+      'https://example.com/child8->https://example.com/child1' => 1,
+      'https://example.com/child1/grandchild1->https://example.com/child6' => 1,
+      'https://example.com/child1->https://example.com/child1/grandchild3' => 1,
+      'https://example.com/child10/grandchild3->https://example.com/child3' => 1,
+      'https://example.com/child2/grandchild2->https://example.com/child6/grandchild1' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child2/grandchild1' => 1,
+      'https://example.com/child2->https://example.com/child1/grandchild3' => 1,
+      'https://example.com/child7/grandchild3->https://example.com/child9/grandchild1' => 1,
+      'https://example.com/child7/grandchild2->https://example.com/child7' => 1,
+      'https://example.com/child9/grandchild3->https://example.com/child10/grandchild2' => 1,
+      'https://example.com/child1/grandchild3->https://example.com/child9/grandchild1' => 1,
+      'https://example.com/child4/grandchild1->https://example.com/child2/grandchild1' => 1,
+      'https://example.com/child9/grandchild3->https://example.com/child7/grandchild3' => 1,
+      'https://example.com/child4/grandchild2->https://example.com/child10' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child2/grandchild1' => 1,
+      'https://example.com->https://example.com/child3/grandchild2' => 1,
+      'https://example.com/child3/grandchild3->https://example.com/child10' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child5/grandchild1' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child8/grandchild1' => 1,
+      'https://example.com/child4/grandchild3->https://example.com/child7/grandchild1' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child2' => 1,
+      'https://example.com/child4/grandchild1->https://example.com/child2' => 1,
+      'https://example.com/child4/grandchild1->https://example.com/child1/grandchild2' => 1,
+      'https://example.com/child3/grandchild2->https://example.com/child6/grandchild2' => 1,
+      'https://example.com/child9/grandchild1->https://example.com/child7/grandchild1' => 1,
+      'https://example.com/child9/grandchild2->https://example.com/child6/grandchild3' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child6/grandchild3' => 1,
+      'https://example.com/child9/grandchild1->https://example.com/child1' => 1,
+      'https://example.com/child9/grandchild3->https://example.com/child7/grandchild1' => 1,
+      'https://example.com/child3/grandchild3->https://example.com/child3/grandchild3' => 1,
+      'https://example.com/child5/grandchild2->https://example.com/child10' => 1,
+      'https://example.com/child4->https://example.com/child1' => 1,
+      'https://example.com/child5/grandchild1->https://example.com/child6/grandchild3' => 1,
+      'https://example.com/child3->https://example.com/child4/grandchild2' => 1,
+      'https://example.com/child1/grandchild1->https://example.com/child8/grandchild3' => 1,
+      'https://example.com/child8->https://example.com/child1/grandchild2' => 1,
+      'https://example.com/child4/grandchild2->https://example.com/child6/grandchild2' => 1,
+      'https://example.com->https://example.com/child4/grandchild3' => 1,
+      'https://example.com/child10->https://example.com/child7' => 1,
+      'https://example.com/child6/grandchild3->https://example.com/child8' => 1,
+      'https://example.com/child10->https://example.com/child9/grandchild1' => 1,
+      'https://example.com/child5/grandchild1->https://example.com/child5' => 1,
+      'https://example.com/child9/grandchild2->https://example.com/child10/grandchild3' => 1,
+      'https://example.com/child8/grandchild2->https://example.com/child9' => 1,
+      'https://example.com/child10/grandchild1->https://example.com/child9/grandchild2' => 1,
+      'https://example.com/child10->https://example.com/child10' => 1,
+      'https://example.com/child2->https://example.com/child2' => 1,
+      'https://example.com/child5/grandchild3->https://example.com/child4/grandchild2' => 1,
+      'https://example.com/child2/grandchild3->https://example.com/child10/grandchild2' => 1,
+      'https://example.com/child6->https://example.com/child7/grandchild3' => 1,
+      'https://example.com/child7->https://example.com/child7' => 1,
+      'https://example.com/child5/grandchild3->https://example.com/child5/grandchild1' => 1,
+      'https://example.com->https://example.com/child4/grandchild2' => 1,
+      'https://example.com/child9->https://example.com/child7/grandchild2' => 1,
+      'https://example.com/child7/grandchild2->https://example.com/child9' => 1,
+      'https://example.com/child3->https://example.com/child3/grandchild3' => 1,
+      'https://example.com/child9/grandchild3->https://example.com/child5/grandchild1' => 1,
+      'https://example.com/child6/grandchild1->https://example.com/child10/grandchild2' => 1,
+      'https://example.com/child8->https://example.com/child6/grandchild2' => 1,
+      'https://example.com/child8/grandchild3->https://example.com/child1' => 1,
+      'https://example.com/child8/grandchild2->https://example.com/child5' => 1,
+      'https://example.com/child4/grandchild3->https://example.com/child9/grandchild1' => 1,
+      'https://example.com/child1/grandchild2->https://example.com/child5/grandchild3' => 1,
+      'https://example.com/child1/grandchild2->https://example.com/child7/grandchild2' => 1,
+      'https://example.com/child2/grandchild2->https://example.com/child8/grandchild3' => 1,
+      'https://example.com/child7->https://example.com/child8/grandchild3' => 1,
+      'https://example.com/child10/grandchild1->https://example.com/child7/grandchild1' => 1,
+      'https://example.com/child5/grandchild2->https://example.com/child4' => 1,
+      ... 2 more items
+    }" (type Map) at path "backtracking"
+        at model.$set (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:1360:9)
+        at model.$set (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:1062:16)
+        at model.Document (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:148:12)
+        at model.Model (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/model.js:106:12)
+        at new model (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/model.js:4919:15)
+        at prepareChartData (/Users/rishi/Documents/designalytic2/backend/mtbe/dataprep.js:114:25)
+        at processTicksAndRejections (node:internal/process/task_queues:96:5) {
+      stringValue: '"Map(102) {\n' +
+        "  'https://example.com/child6->https://example.com/child10/grandchild2' => 1,\n" +
+        "  'https://example.com/child3/grandchild1->https://example.com/child1/grandchild1' => 1,\n" +
+        "  'https://example.com/child5->https://example.com/child6/grandchild1' => 1,\n" +
+        "  'https://example.com/child7/grandchild3->https://example.com/child10/grandchild1' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child3/grandchild2' => 1,\n" +
+        "  'https://example.com/child1/grandchild2->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child6/grandchild1->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child8->https://example.com/child2' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child10/grandchild3' => 1,\n" +
+        "  'https://example.com/child6/grandchild1->https://example.com/child2/grandchild1' => 1,\n" +
+        "  'https://example.com/child2/grandchild1->https://example.com/child6/grandchild1' => 1,\n" +
+        "  'https://example.com/child9/grandchild2->https://example.com/child6/grandchild1' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child5' => 1,\n" +
+        "  'https://example.com/child7/grandchild3->https://example.com/child2/grandchild1' => 1,\n" +
+        "  'https://example.com/child8/grandchild2->https://example.com/child4/grandchild2' => 1,\n" +
+        "  'https://example.com/child2/grandchild2->https://example.com/child7/grandchild3' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child2/grandchild3' => 1,\n" +
+        "  'https://example.com/child6/grandchild2->https://example.com/child8/grandchild3' => 1,\n" +
+        "  'https://example.com/child1->https://example.com/child6' => 1,\n" +
+        "  'https://example.com/child1->https://example.com/child4' => 1,\n" +
+        "  'https://example.com/child8/grandchild2->https://example.com/child1/grandchild2' => 1,\n" +
+        "  'https://example.com/child5/grandchild3->https://example.com/child7/grandchild3' => 1,\n" +
+        "  'https://example.com/child2->https://example.com/child10/grandchild2' => 1,\n" +
+        "  'https://example.com/child4/grandchild3->https://example.com/child7' => 1,\n" +
+        "  'https://example.com/child2->https://example.com/child8/grandchild1' => 1,\n" +
+        "  'https://example.com/child8/grandchild1->https://example.com/child10/grandchild1' => 1,\n" +
+        "  'https://example.com/child1/grandchild2->https://example.com/child10/grandchild1' => 1,\n" +
+        "  'https://example.com/child5/grandchild2->https://example.com/child9' => 1,\n" +
+        "  'https://example.com/child8/grandchild1->https://example.com/child7/grandchild1' => 1,\n" +
+        "  'https://example.com/child1->https://example.com/child8/grandchild1' => 1,\n" +
+        "  'https://example.com/child3->https://example.com/child8/grandchild1' => 1,\n" +
+        "  'https://example.com/child6->https://example.com/child2' => 1,\n" +
+        "  'https://example.com/child8->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child1/grandchild1->https://example.com/child6' => 1,\n" +
+        "  'https://example.com/child1->https://example.com/child1/grandchild3' => 1,\n" +
+        "  'https://example.com/child10/grandchild3->https://example.com/child3' => 1,\n" +
+        "  'https://example.com/child2/grandchild2->https://example.com/child6/grandchild1' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child2/grandchild1' => 1,\n" +
+        "  'https://example.com/child2->https://example.com/child1/grandchild3' => 1,\n" +
+        "  'https://example.com/child7/grandchild3->https://example.com/child9/grandchild1' => 1,\n" +
+        "  'https://example.com/child7/grandchild2->https://example.com/child7' => 1,\n" +
+        "  'https://example.com/child9/grandchild3->https://example.com/child10/grandchild2' => 1,\n" +
+        "  'https://example.com/child1/grandchild3->https://example.com/child9/grandchild1' => 1,\n" +
+        "  'https://example.com/child4/grandchild1->https://example.com/child2/grandchild1' => 1,\n" +
+        "  'https://example.com/child9/grandchild3->https://example.com/child7/grandchild3' => 1,\n" +
+        "  'https://example.com/child4/grandchild2->https://example.com/child10' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child2/grandchild1' => 1,\n" +
+        "  'https://example.com->https://example.com/child3/grandchild2' => 1,\n" +
+        "  'https://example.com/child3/grandchild3->https://example.com/child10' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child5/grandchild1' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child8/grandchild1' => 1,\n" +
+        "  'https://example.com/child4/grandchild3->https://example.com/child7/grandchild1' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child2' => 1,\n" +
+        "  'https://example.com/child4/grandchild1->https://example.com/child2' => 1,\n" +
+        "  'https://example.com/child4/grandchild1->https://example.com/child1/grandchild2' => 1,\n" +
+        "  'https://example.com/child3/grandchild2->https://example.com/child6/grandchild2' => 1,\n" +
+        "  'https://example.com/child9/grandchild1->https://example.com/child7/grandchild1' => 1,\n" +
+        "  'https://example.com/child9/grandchild2->https://example.com/child6/grandchild3' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child6/grandchild3' => 1,\n" +
+        "  'https://example.com/child9/grandchild1->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child9/grandchild3->https://example.com/child7/grandchild1' => 1,\n" +
+        "  'https://example.com/child3/grandchild3->https://example.com/child3/grandchild3' => 1,\n" +
+        "  'https://example.com/child5/grandchild2->https://example.com/child10' => 1,\n" +
+        "  'https://example.com/child4->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child5/grandchild1->https://example.com/child6/grandchild3' => 1,\n" +
+        "  'https://example.com/child3->https://example.com/child4/grandchild2' => 1,\n" +
+        "  'https://example.com/child1/grandchild1->https://example.com/child8/grandchild3' => 1,\n" +
+        "  'https://example.com/child8->https://example.com/child1/grandchild2' => 1,\n" +
+        "  'https://example.com/child4/grandchild2->https://example.com/child6/grandchild2' => 1,\n" +
+        "  'https://example.com->https://example.com/child4/grandchild3' => 1,\n" +
+        "  'https://example.com/child10->https://example.com/child7' => 1,\n" +
+        "  'https://example.com/child6/grandchild3->https://example.com/child8' => 1,\n" +
+        "  'https://example.com/child10->https://example.com/child9/grandchild1' => 1,\n" +
+        "  'https://example.com/child5/grandchild1->https://example.com/child5' => 1,\n" +
+        "  'https://example.com/child9/grandchild2->https://example.com/child10/grandchild3' => 1,\n" +
+        "  'https://example.com/child8/grandchild2->https://example.com/child9' => 1,\n" +
+        "  'https://example.com/child10/grandchild1->https://example.com/child9/grandchild2' => 1,\n" +
+        "  'https://example.com/child10->https://example.com/child10' => 1,\n" +
+        "  'https://example.com/child2->https://example.com/child2' => 1,\n" +
+        "  'https://example.com/child5/grandchild3->https://example.com/child4/grandchild2' => 1,\n" +
+        "  'https://example.com/child2/grandchild3->https://example.com/child10/grandchild2' => 1,\n" +
+        "  'https://example.com/child6->https://example.com/child7/grandchild3' => 1,\n" +
+        "  'https://example.com/child7->https://example.com/child7' => 1,\n" +
+        "  'https://example.com/child5/grandchild3->https://example.com/child5/grandchild1' => 1,\n" +
+        "  'https://example.com->https://example.com/child4/grandchild2' => 1,\n" +
+        "  'https://example.com/child9->https://example.com/child7/grandchild2' => 1,\n" +
+        "  'https://example.com/child7/grandchild2->https://example.com/child9' => 1,\n" +
+        "  'https://example.com/child3->https://example.com/child3/grandchild3' => 1,\n" +
+        "  'https://example.com/child9/grandchild3->https://example.com/child5/grandchild1' => 1,\n" +
+        "  'https://example.com/child6/grandchild1->https://example.com/child10/grandchild2' => 1,\n" +
+        "  'https://example.com/child8->https://example.com/child6/grandchild2' => 1,\n" +
+        "  'https://example.com/child8/grandchild3->https://example.com/child1' => 1,\n" +
+        "  'https://example.com/child8/grandchild2->https://example.com/child5' => 1,\n" +
+        "  'https://example.com/child4/grandchild3->https://example.com/child9/grandchild1' => 1,\n" +
+        "  'https://example.com/child1/grandchild2->https://example.com/child5/grandchild3' => 1,\n" +
+        "  'https://example.com/child1/grandchild2->https://example.com/child7/grandchild2' => 1,\n" +
+        "  'https://example.com/child2/grandchild2->https://example.com/child8/grandchild3' => 1,\n" +
+        "  'https://example.com/child7->https://example.com/child8/grandchild3' => 1,\n" +
+        "  'https://example.com/child10/grandchild1->https://example.com/child7/grandchild1' => 1,\n" +
+        "  'https://example.com/child5/grandchild2->https://example.com/child4' => 1,\n" +
+        '  ... 2 more items\n' +
+        '}"',
+      messageFormat: undefined,
+      kind: 'Map',
+      value: [Map],
+      path: 'backtracking',
+      reason: Error: Mongoose maps do not support keys that contain ".", got "https://example.com/child6->https://example.com/child10/grandchild2"
+          at checkValidKey (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/types/map.js:233:11)
+          at Map.set (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/types/map.js:63:5)
+          at new Map (<anonymous>)
+          at new MongooseMap (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/types/map.js:24:5)
+          at Map.cast (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/schema/map.js:59:12)
+          at Map.SchemaType.applySetters (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/schematype.js:1123:12)
+          at model.$set (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:1313:20)
+          at model.$set (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:1062:16)
+          at model.Document (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/document.js:148:12)
+          at model.Model (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/model.js:106:12)
+          at new model (/Users/rishi/Documents/designalytic2/backend/mtbe/node_modules/mongoose/lib/model.js:4919:15)
+          at prepareChartData (/Users/rishi/Documents/designalytic2/backend/mtbe/dataprep.js:114:25)
+          at processTicksAndRejections (node:internal/process/task_queues:96:5),
+      valueType: 'Map'
+    }
+  },
+  _message: 'FinalData validation failed'
+}
+Data preparation complete.

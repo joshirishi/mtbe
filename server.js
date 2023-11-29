@@ -93,6 +93,13 @@ const linkSchema = new mongoose.Schema({
 
 const WebMapData = mongoose.model('WebMapData', linkSchema);
 
+// Define a Mongoose schema and model for final data
+const finalDataSchema = new mongoose.Schema({
+  data: mongoose.Schema.Types.Mixed // This will hold our processed hierarchical data
+});
+
+const FinalData = mongoose.model('FinalData', finalDataSchema);
+
 // Import and setup the joint data API
 const setupJointDataApi = require('./jointDataApi');
 setupJointDataApi(app);
@@ -303,6 +310,28 @@ app.get('/api/heatmap', async (req, res) => {
   } catch (error){
     console.error('Error:', error);
     res.status(500).send('Error retreiving data: ' + error);
+  }
+});
+
+// API endpoint to save processed web map data to final_data collection
+app.post('/api/save-final-data', async (req, res) => {
+  try {
+    const finalData = new FinalData({ data: req.body });
+    await finalData.save();
+    res.status(200).send('Processed data saved to final_data collection');
+  } catch (error) {
+    console.error('Error saving final data:', error);
+    res.status(500).send('Error saving processed data: ' + error);
+  }
+});
+// API endpoint to get processed data from final_data collection for the network chart
+app.get('/api/get-final-data', async (req, res) => {
+  try {
+    const finalData = await FinalData.findOne().sort({ _id: -1 }); // Assuming you want the latest document
+    res.json(finalData.data); // Send the data field to the client
+  } catch (error) {
+    console.error('Error fetching final data:', error);
+    res.status(500).send('Error fetching processed data: ' + error);
   }
 });
 

@@ -7,32 +7,35 @@ mongoose.connect('mongodb://localhost:27017/trackingDB', { useNewUrlParser: true
 
 const domain = 'https://example.com';
 
-const createWebMapStructure = () => {
-    const children = [];
-    for (let i = 1; i <= 10; i++) {
-        const grandchildren = [];
-        for (let j = 1; j <= 3; j++) {
-            grandchildren.push({
-                websiteId: `${domain.replace('https://', '')}-username`,
-                name: `Grandchild ${i}-${j}`,
-                url: `${domain}/child${i}/grandchild${j}`,
-                children: []
-            });
-        }
-        children.push({
-            websiteId: `${domain.replace('https://', '')}-username`,
-            name: `Child ${i}`,
-            url: `${domain}/child${i}`,
-            children: grandchildren
-        });
-    }
+const createWebMapStructure = (currentDepth = 0) => {
+  const children = [];
+  for (let i = 1; i <= 10; i++) {
+      const grandchildren = [];
+      for (let j = 1; j <= 3; j++) {
+          grandchildren.push({
+              websiteId: `${domain.replace('https://', '')}-username`,
+              name: `Grandchild ${i}-${j}`,
+              url: `${domain}/child${i}/grandchild${j}`,
+              depth: currentDepth + 2, // Depth for grandchildren
+              children: []
+          });
+      }
+      children.push({
+          websiteId: `${domain.replace('https://', '')}-username`,
+          name: `Child ${i}`,
+          url: `${domain}/child${i}`,
+          depth: currentDepth + 1, // Depth for children
+          children: grandchildren
+      });
+  }
 
-    return {
-        websiteId: `${domain.replace('https://', '')}-username`,
-        name: 'Root',
-        url: domain,
-        children: children
-    };
+  return {
+      websiteId: `${domain.replace('https://', '')}-username`,
+      name: 'Root',
+      url: domain,
+      depth: currentDepth, // Depth for root
+      children: children
+  };
 };
 
 const getAllUrlsFromWebMap = (node) => {
