@@ -324,16 +324,18 @@ app.post('/api/save-final-data', async (req, res) => {
     res.status(500).send('Error saving processed data: ' + error);
   }
 });
+
 // API endpoint to get processed data from final_data collection for the network chart
 app.get('/api/get-final-data', async (req, res) => {
   try {
-    const finalData = await FinalData.findOne().sort({ _id: -1 }); // Assuming you want the latest document
-    res.json(finalData.data); // Send the data field to the client
+    const finalData = await FinalData.find(); // Assuming FinalData is your model name
+    res.status(200).json(finalData);
   } catch (error) {
     console.error('Error fetching final data:', error);
-    res.status(500).send('Error fetching processed data: ' + error);
+    res.status(500).send('Error fetching final data: ' + error);
   }
 });
+
 
 // Root endpoint
 app.get('/', (req, res) => {
