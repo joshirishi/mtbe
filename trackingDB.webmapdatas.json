@@ -1,0 +1,321 @@
+[{
+  "_id": {
+    "$oid": "6565e04f0e8d3b6d19874852"
+  },
+  "websiteId": "example.com-username",
+  "name": "Root",
+  "url": "https://example.com",
+  "children": [
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 1-1",
+          "url": "https://example.com/child1/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 1-2",
+          "url": "https://example.com/child1/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 1-3",
+          "url": "https://example.com/child1/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874853"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 1",
+      "url": "https://example.com/child1"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 2-1",
+          "url": "https://example.com/child2/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 2-2",
+          "url": "https://example.com/child2/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 2-3",
+          "url": "https://example.com/child2/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874854"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 2",
+      "url": "https://example.com/child2"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 3-1",
+          "url": "https://example.com/child3/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 3-2",
+          "url": "https://example.com/child3/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 3-3",
+          "url": "https://example.com/child3/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874855"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 3",
+      "url": "https://example.com/child3"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 4-1",
+          "url": "https://example.com/child4/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 4-2",
+          "url": "https://example.com/child4/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 4-3",
+          "url": "https://example.com/child4/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874856"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 4",
+      "url": "https://example.com/child4"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 5-1",
+          "url": "https://example.com/child5/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 5-2",
+          "url": "https://example.com/child5/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 5-3",
+          "url": "https://example.com/child5/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874857"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 5",
+      "url": "https://example.com/child5"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 6-1",
+          "url": "https://example.com/child6/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 6-2",
+          "url": "https://example.com/child6/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 6-3",
+          "url": "https://example.com/child6/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874858"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 6",
+      "url": "https://example.com/child6"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 7-1",
+          "url": "https://example.com/child7/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 7-2",
+          "url": "https://example.com/child7/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 7-3",
+          "url": "https://example.com/child7/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d19874859"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 7",
+      "url": "https://example.com/child7"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 8-1",
+          "url": "https://example.com/child8/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 8-2",
+          "url": "https://example.com/child8/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 8-3",
+          "url": "https://example.com/child8/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d1987485a"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 8",
+      "url": "https://example.com/child8"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 9-1",
+          "url": "https://example.com/child9/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 9-2",
+          "url": "https://example.com/child9/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 9-3",
+          "url": "https://example.com/child9/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d1987485b"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 9",
+      "url": "https://example.com/child9"
+    },
+    {
+      "children": [
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 10-1",
+          "url": "https://example.com/child10/grandchild1",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 10-2",
+          "url": "https://example.com/child10/grandchild2",
+          "depth": 2,
+          "children": []
+        },
+        {
+          "websiteId": "example.com-username",
+          "name": "Grandchild 10-3",
+          "url": "https://example.com/child10/grandchild3",
+          "depth": 2,
+          "children": []
+        }
+      ],
+      "_id": {
+        "$oid": "6565e04f0e8d3b6d1987485c"
+      },
+      "websiteId": "example.com-username",
+      "name": "Child 10",
+      "url": "https://example.com/child10"
+    }
+  ],
+  "__v": 0
+}]
